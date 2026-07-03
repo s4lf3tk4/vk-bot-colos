@@ -49,7 +49,7 @@ class MessageProcess{
 
    private function executeCommand($commandKey, $message, $peer_id){    
     if (!isset($this->commands[$commandKey])) {
-        $this->log("Команда '$commandKey' не найдена в списке");
+        
         $this->sendResponse(
             $peer_id, 
             "Команда не найдена.", 
@@ -106,7 +106,7 @@ class MessageProcess{
 
 private function log($message) {
     file_put_contents(
-        __DIR__ . '/../logs/debug.log',
+        __DIR__ . '/../logs/messageProc_error.log',
         date('Y-m-d H:i:s') . " " . $message . "\n",
         FILE_APPEND
     );

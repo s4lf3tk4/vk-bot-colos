@@ -31,7 +31,7 @@ class BotController{
         $data = json_decode($rawInput, true);
 
         if (!$data) {
-            $this->log("Ошибка парсинга JSON");
+            $this->log("Ошибка парсинга JSON в BotController");
             return;
         }
         if ($this->isConfirmationRequest($data)) {
@@ -48,7 +48,7 @@ class BotController{
     }
     private function log($message) {
     file_put_contents(
-        __DIR__ . '/../logs/debug.log',
+        __DIR__ . '/../logs/botControl_error.log',
         date('Y-m-d H:i:s') . " " . $message . "\n",
         FILE_APPEND
     );
