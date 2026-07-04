@@ -1,0 +1,30 @@
+<?php
+   abstract class AbstractPhotoAnalysis implements PhotoAnalysisInterf{
+        protected $photoURL;
+        protected $peer_id;
+        public function __construct(string $photoURL, int $peer_id){
+            $this->photoURL = $photoURL;
+            $this->peer_id  = $peer_id;
+        }
+        public function getFullResult(){
+            $result = [
+                $this->getAnalysis(),
+                $this->getRecommendations(),
+                $this->getHealthRating(),
+            ];
+            $text = [];
+
+            foreach ($results as $result) {
+                if ($result && !empty($result['text'])) {
+                    $texts[] = $result['text'];
+                }
+            }
+            return [
+                'text' => implode("\n", $texts),
+                'keyboard' => KeyboardBuilder::getMainMenuJson(),
+            ];
+            
+        }
+    }
+
+?>

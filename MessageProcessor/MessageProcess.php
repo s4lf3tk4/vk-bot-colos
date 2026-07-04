@@ -61,17 +61,12 @@ class MessageProcess{
     $handler = $this->commands[$commandKey];
     
     try{
-            
+           
         $responseData = $handler($message, $peer_id);
-
-
         $text = $responseData['text'] ?? '';
         $keyboard = $responseData['keyboard'] ?? null;
         $this->sendResponse($peer_id, $text, $keyboard);
-            
-        
-    
-        
+
     } catch (\Throwable $e) {
         $this->log("Ошибка при выполнении команды '$commandKey': " . $e->getMessage());
         

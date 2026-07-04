@@ -6,6 +6,9 @@ class PhotoProcess{
     private $peer_id;      
 
     public function __construct($attachment, $peer_id) {   
+
+        require_once 
+
         $this->attachment = $attachment;
         $this->peer_id = $peer_id;                      
     }
