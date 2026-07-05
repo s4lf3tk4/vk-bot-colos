@@ -36,8 +36,5 @@ class ServiceMessage
         ];
     }
 
-    public static function uploadPhoto($photo_url) {
-        return "✅ Фото получено! Ссылка: " . $photo_url;
-    }
 }
 ?>

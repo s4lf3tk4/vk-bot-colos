@@ -7,7 +7,10 @@ class PhotoProcess{
 
     public function __construct($attachment, $peer_id) {   
 
-        require_once 
+        require_once __DIR__ . '/FactoryPhotoAnalysis/PhotoAnalysisInterf.php';
+        require_once __DIR__ . '/FactoryPhotoAnalysis/AbstractPhotoAnalysis.php';
+        require_once __DIR__ . '/FactoryPhotoAnalysis/OnlyAnalysis.php';
+        require_once __DIR__ . '/FactoryPhotoAnalysis/FullAnalysis.php';
 
         $this->attachment = $attachment;
         $this->peer_id = $peer_id;                      
@@ -22,10 +25,15 @@ class PhotoProcess{
         return null;
     }
 
-    private function processPhotoMessage($photoUrl){
+    private function processPhotoMessage($photoURL){
         try {
-            $responseData = ServiceMessage::uploadPhoto($photoUrl);
-            SendResponse::vkSendMessage($this->peer_id, $responseData);
+            $analyzer = new FullAnalysis($photoURL, $this->peer_id);
+            $result = $analyzer->getFullResult();
+            SendResponse::vkSendMessage(
+                $this->peer_id,
+                $result['text'],
+                $result['keyboard']
+            );
         } catch (\Throwable $e) {
             $this->log("Ошибка при обработке фото: " . $e->getMessage());
            SendResponse::vkSendMessage($this->peer_id, "Произошла ошибка при обработке фото.", KeyboardBuilder::getMainMenuJson());
@@ -34,6 +42,14 @@ class PhotoProcess{
 
     public function processPhoto(){
         $photoURL = $this->extractPhotoUrl($this->attachment);
+        if ($photoURL === null){
+            SendResponse::vkSendMessage(
+                $this->peer_id,
+                "Не удалось извлечь фото. Попробуйте снова.",
+                KeyboardBuilder::getMainMenuJson()
+            );
+            return;
+        }
         $this->processPhotoMessage($photoURL);
     }
         

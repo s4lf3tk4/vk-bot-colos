@@ -2,9 +2,8 @@
 
 class BotController{
 
-    private MessageProcess $messageProcessor;
 
-    public function __construct(MessageProcess $messageProcessor = null){
+    public function __construct(){
 
         require_once __DIR__ . '/../config/Config.php';
         require_once __DIR__ . '/../MessageProcessor/MessageProcess.php';
@@ -12,8 +11,7 @@ class BotController{
         require_once __DIR__ . '/../Service/SendResponse.php';
         require_once __DIR__ . '/../Service/ServiceMessage.php';
         require_once __DIR__ . '/../Service/KeyboardBuilder.php';
-
-        $this->messageProcessor = new MessageProcess();
+        require_once __DIR__ . '/../MessageProcessor/CommandHandler.php';
 
 
     }
@@ -40,12 +38,50 @@ class BotController{
         }
         if ($this->isMessageNewRequest($data)) {
             $commands = require_once __DIR__ . '/../config/Commands.php';
-            $newMessage = new MessageProcess($commands);
+            $commandHandler = new CommandHandler($commands);
+            $newMessage = new MessageProcess($commandHandler);
             $newMessage->handleMessage($data);
             return;
         }
         echo('ok');
     }
+
+//     public function handleRequest(): void
+// {
+//     $rawInput = file_get_contents('php://input');
+//     $data = json_decode($rawInput, true);
+
+//     // Временный лог
+//     file_put_contents(__DIR__ . '/../logs/debug.log', 
+//         date('Y-m-d H:i:s') . " " . ($data['type'] ?? 'no_type') . "\n", 
+//         FILE_APPEND
+//     );
+
+//     if (!$data) {
+//         echo('ok');
+//         return;
+//     }
+
+//     if ($this->isConfirmationRequest($data)) {
+//         echo VK_CONFIRMATION_CODE;
+//         return;
+//     }
+
+//     if ($this->isMessageNewRequest($data)) {
+//         file_put_contents(__DIR__ . '/../logs/debug.log', 
+//             date('Y-m-d H:i:s') . " message_new received\n", 
+//             FILE_APPEND
+//         );
+// //require_once в commands
+//         $commands = require __DIR__ . '/../config/Commands.php';
+//         $commandHandler = new CommandHandler($commands);
+//         $newMessage = new MessageProcess($commandHandler);
+//         $newMessage->handleMessage($data);
+//         return;
+//     }
+
+//     echo('ok');
+// }
     private function log($message) {
     file_put_contents(
         __DIR__ . '/../logs/botControl_error.log',

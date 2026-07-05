@@ -6,13 +6,13 @@
             $this->photoURL = $photoURL;
             $this->peer_id  = $peer_id;
         }
-        public function getFullResult(){
-            $result = [
+        public function getFullResult(): array{
+            $results = [
                 $this->getAnalysis(),
                 $this->getRecommendations(),
                 $this->getHealthRating(),
             ];
-            $text = [];
+            $texts = [];
 
             foreach ($results as $result) {
                 if ($result && !empty($result['text'])) {
