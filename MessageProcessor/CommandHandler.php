@@ -38,7 +38,7 @@
     
     try{
 
-        $responseData = $handler($message, $peer_id);
+        $responseData = $handler();
         $text = $responseData['text'] ?? '';
         $keyboard = $responseData['keyboard'] ?? null;
         $this->sendResponse($peer_id, $text, $keyboard);

@@ -13,6 +13,8 @@ class BotController{
         require_once __DIR__ . '/../Service/KeyboardBuilder.php';
         require_once __DIR__ . '/../MessageProcessor/CommandHandler.php';
 
+        require_once __DIR__ . '/../MessageProcessor/UserState/UserState.php';
+
 
     }
 
@@ -30,6 +32,7 @@ class BotController{
 
         if (!$data) {
             $this->log("Ошибка парсинга JSON в BotController");
+            echo('ok');
             return;
         }
         if ($this->isConfirmationRequest($data)) {
@@ -43,50 +46,13 @@ class BotController{
             $newMessage->handleMessage($data);
             return;
         }
-        echo('ok');
     }
 
-//     public function handleRequest(): void
-// {
-//     $rawInput = file_get_contents('php://input');
-//     $data = json_decode($rawInput, true);
-
-//     // Временный лог
-//     file_put_contents(__DIR__ . '/../logs/debug.log', 
-//         date('Y-m-d H:i:s') . " " . ($data['type'] ?? 'no_type') . "\n", 
-//         FILE_APPEND
-//     );
-
-//     if (!$data) {
-//         echo('ok');
-//         return;
-//     }
-
-//     if ($this->isConfirmationRequest($data)) {
-//         echo VK_CONFIRMATION_CODE;
-//         return;
-//     }
-
-//     if ($this->isMessageNewRequest($data)) {
-//         file_put_contents(__DIR__ . '/../logs/debug.log', 
-//             date('Y-m-d H:i:s') . " message_new received\n", 
-//             FILE_APPEND
-//         );
-// //require_once в commands
-//         $commands = require __DIR__ . '/../config/Commands.php';
-//         $commandHandler = new CommandHandler($commands);
-//         $newMessage = new MessageProcess($commandHandler);
-//         $newMessage->handleMessage($data);
-//         return;
-//     }
-
-//     echo('ok');
-// }
     private function log($message) {
-    file_put_contents(
-        __DIR__ . '/../logs/botControl_error.log',
-        date('Y-m-d H:i:s') . " " . $message . "\n",
-        FILE_APPEND
-    );
+        file_put_contents(
+            __DIR__ . '/../logs/botControl_error.log',
+            date('Y-m-d H:i:s') . " " . $message . "\n",
+            FILE_APPEND
+        );
     }
 }

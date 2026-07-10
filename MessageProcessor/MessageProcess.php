@@ -7,16 +7,34 @@ class MessageProcess{
     public function __construct(CommandHandler $commandHandler){
         $this->commandHandler = $commandHandler;
     }
+
     public function handleMessage($data) : void{
         try {
+
+            $eventId = $data['event_id'] ?? '';
             $message = $data['object']['message']['text'] ?? '';
             $peer_id = $data['object']['message']['peer_id'] ?? 0;
             $attachments = $data['object']['message']['attachments'] ?? [];
 
-            if ($this->hasPhoto($attachments)) {
-                $photo = new PhotoProcess($attachments, $peer_id);
-                $photo->processPhoto();
+            if ($eventId && $this->isDuplicateEvent($eventId)) {
                 return;
+            }
+
+            if ($this->hasPhoto($attachments)) {
+                $user = new UserState($peer_id);
+                $userData = $user->handle();
+                if ($userData['requests']>0 || $userData['status'] === 'prem'){
+                    $photo = new PhotoProcess($attachments, $peer_id);
+                    $photo->processPhoto();
+                    if ($userData['status'] === 'guest'){
+                        $user->decrementRequests();
+                    }
+                    echo('ok');
+                    return;
+                }
+                else{
+                    SendResponse::vkSendMessage($peer_id, "⚠️ Лимит исчерпан.");
+                }
             }
             $this->commandHandler->handle($message, $peer_id);
             echo('ok');
@@ -26,6 +44,31 @@ class MessageProcess{
             echo('ok');
         }
     }
+
+    private function isDuplicateEvent(string $eventId): bool{
+        if ($eventId === '') {
+            return false;
+        }
+
+        $cacheFile = __DIR__ . '/../cache/events.json';
+        $events = [];
+
+        if (file_exists($cacheFile)) {
+            $events = json_decode(file_get_contents($cacheFile), true) ?: [];
+        }
+
+        $now = time();
+        $events = array_filter($events, fn($time) => $now - $time < 60);
+
+        if (isset($events[$eventId])) {
+            return true;
+        }
+
+        $events[$eventId] = $now;
+        file_put_contents($cacheFile, json_encode($events));
+
+        return false;
+}
 
     private function hasPhoto($attachments){
         foreach ($attachments as $attach) {

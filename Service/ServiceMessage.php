@@ -2,14 +2,14 @@
 
 class ServiceMessage
 {
-    public static function sayHello($message, $peer_id) {
+    public static function photoSending() {
         return [
             'text' => "📸 Отправьте фото блюда для анализа.",
             'keyboard' => KeyboardBuilder::getBackButtonJson(),
         ];
     }
 
-    public static function startMessage($message, $peer_id) {
+    public static function startMessage() {
         return [
             'text' => "🌟 Добро пожаловать в бот здорового питания! 🌟\n\n" .
                       "🍽️ Я помогу вам анализировать рацион с помощью искусственного интеллекта.\n\n" .
@@ -22,14 +22,14 @@ class ServiceMessage
         ];
     }
 
-    public static function optionsButton($message, $peer_id) {
+    public static function optionsButton() {
         return [
             'text' => '⚙️ Настройки аккаунта',
             'keyboard' => KeyboardBuilder::getUserOptionsJson(),
         ];
     }
 
-    public static function backButton($message, $peer_id) {
+    public static function backButton() {
         return [
             'text' => 'Вы вернулись в главное меню.',
             'keyboard' => KeyboardBuilder::getMainMenuJson(),

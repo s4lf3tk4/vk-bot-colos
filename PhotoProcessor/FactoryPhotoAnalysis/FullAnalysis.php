@@ -2,20 +2,19 @@
 
 class FullAnalysis extends AbstractPhotoAnalysis{
 
-    //через curl
     public function getAnalysis(){
     return [
-                    'text' => "Ваш анализ фото: " . $this->photoURL
+            'text' => "Ваш анализ фото: " . $this->photoURL
         ];
     }
     public function getRecommendations(){
     return [
-                    'text' => "Ваши реккомендации: " 
+            'text' => "Ваши реккомендации: " 
         ];
     }
     public function getHealthRating(){
     return [
-                    'text' => "Ваша оценка питания:" 
+            'text' => "Ваша оценка питания:" 
         ];
     }
 
