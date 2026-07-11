@@ -3,9 +3,10 @@
     class CommandHandler{
 
         private $commands = [];
-
+        private Logger $logger;
         public function __construct(array $commands){
             $this->commands = $commands;
+            $this->logger = new Logger('CommandHandler_error.log');
         }
         
     public function handle($message, $peer_id){
@@ -65,11 +66,7 @@
     }
 
     private function log($message) {
-    file_put_contents(
-        __DIR__ . '/../logs/commandHandler_error.log',
-        date('Y-m-d H:i:s') . " " . $message . "\n",
-        FILE_APPEND
-    );
+        $this->logger->handle($message);
     }
 
 

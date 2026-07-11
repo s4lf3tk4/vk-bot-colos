@@ -2,7 +2,8 @@
 
 class BotController{
 
-
+    private Logger $logger;
+    
     public function __construct(){
 
         require_once __DIR__ . '/../config/Config.php';
@@ -15,6 +16,7 @@ class BotController{
 
         require_once __DIR__ . '/../MessageProcessor/UserState/UserState.php';
 
+        $this->logger = new Logger('botController_error.log');
 
     }
 
@@ -49,10 +51,6 @@ class BotController{
     }
 
     private function log($message) {
-        file_put_contents(
-            __DIR__ . '/../logs/botControl_error.log',
-            date('Y-m-d H:i:s') . " " . $message . "\n",
-            FILE_APPEND
-        );
+        $this->logger->handle($message);
     }
 }

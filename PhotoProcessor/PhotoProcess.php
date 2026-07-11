@@ -4,7 +4,7 @@ class PhotoProcess{
 
     private $attachment;
     private $peer_id;      
-
+    private Logger $logger;
     public function __construct($attachment, $peer_id) {   
 
         require_once __DIR__ . '/FactoryPhotoAnalysis/PhotoAnalysisInterf.php';
@@ -13,7 +13,8 @@ class PhotoProcess{
         require_once __DIR__ . '/FactoryPhotoAnalysis/FullAnalysis.php';
 
         $this->attachment = $attachment;
-        $this->peer_id = $peer_id;                      
+        $this->peer_id = $peer_id;       
+        $this->logger = new Logger('PhotoProcess_error.log');               
     }
     private function extractPhotoUrl($attachments){
         foreach ($attachments as $attach) {
@@ -54,11 +55,7 @@ class PhotoProcess{
     }
         
     private function log($message){
-        file_put_contents(
-            __DIR__ . '/../logs/photo_error.log',
-            date('Y-m-d H:i:s') . " " . $message . "\n",
-            FILE_APPEND
-        );
+        $this->logger->handle($message);
     }
     
 }

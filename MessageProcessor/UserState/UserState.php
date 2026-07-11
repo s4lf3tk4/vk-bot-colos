@@ -3,9 +3,11 @@
     class UserState{
         private $peer_id;
         private mysqli $conn;
+        private Logger $logger;
         public function __construct($peer_id){
             $this->peer_id = $peer_id;
-             $this->conn = require __DIR__ . '/DB_config.php';
+            $this->conn = require __DIR__ . '/DB_config.php';
+            $this->logger = new Logger('UserState_error.log');
         }
         public function handle(){
             try{ 
@@ -87,13 +89,13 @@
         private function handleError($e, $peer_id = 0){
             $errorMessage = "Ошибка: " . $e->getMessage() . " в строке: " . $e->getLine();
             $this->log($errorMessage);
+            if ($peer_id > 0) {
+                $keyboard = KeyboardBuilder::getMainMenuJson();
+                SendResponse::vkSendMessage($peer_id, "Произошла техническая ошибка. Попробуйте позже.", $keyboard);
+            }
         }
         private function log($message) {
-            file_put_contents(
-                __DIR__ . '/../../logs/UserState_errors.log',
-                date('Y-m-d H:i:s') . " " . $message . "\n",
-                FILE_APPEND
-            );
+            $this->logger->handle($message);
         }
 
     }

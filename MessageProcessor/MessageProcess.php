@@ -3,9 +3,10 @@
 class MessageProcess{
 
     private CommandHandler $commandHandler;
-    
+    private Logger $logger;
     public function __construct(CommandHandler $commandHandler){
         $this->commandHandler = $commandHandler;
+        $this->logger = new Logger('MessageProcess_error.log');
     }
 
     public function handleMessage($data) : void{
@@ -15,7 +16,10 @@ class MessageProcess{
             $message = $data['object']['message']['text'] ?? '';
             $peer_id = $data['object']['message']['peer_id'] ?? 0;
             $attachments = $data['object']['message']['attachments'] ?? [];
-
+                
+            if (($data['object']['message']['out'] ?? 0) === 1) {
+                return; 
+            }
             if ($eventId && $this->isDuplicateEvent($eventId)) {
                 return;
             }
@@ -89,11 +93,7 @@ class MessageProcess{
         }
     }
     private function log($message) {
-        file_put_contents(
-            __DIR__ . '/../logs/messageProc_error.log',
-            date('Y-m-d H:i:s') . " " . $message . "\n",
-            FILE_APPEND
-        );
+        $this->logger->handle($message);
     }
 
 
