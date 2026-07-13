@@ -4,9 +4,12 @@ class MessageProcess{
 
     private CommandHandler $commandHandler;
     private Logger $logger;
-    public function __construct(CommandHandler $commandHandler){
+    private UserRepository $userRepository;
+
+    public function __construct(CommandHandler $commandHandler, UserRepository $userRepository){
         $this->commandHandler = $commandHandler;
         $this->logger = new Logger('MessageProcess_error.log');
+        $this->userRepository = $userRepository;   
     }
 
     public function handleMessage($data) : void{
@@ -25,7 +28,7 @@ class MessageProcess{
             }
 
             if ($this->hasPhoto($attachments)) {
-                $user = new UserState($peer_id);
+                $user = new UserState($peer_id, $this->userRepository);
                 $userData = $user->handle();
                 if ($userData['requests']>0 || $userData['status'] === 'prem'){
                     $photo = new PhotoProcess($attachments, $peer_id);
@@ -37,7 +40,10 @@ class MessageProcess{
                     return;
                 }
                 else{
-                    SendResponse::vkSendMessage($peer_id, "⚠️ Лимит исчерпан.");
+                    $errorMessage = ServiceMessage::noRequestsErorrMessage();
+                    SendResponse::vkSendMessage($peer_id, $errorMessage['text'], $errorMessage['keyboard']);
+                    echo('ok');
+                    return;
                 }
             }
             $this->commandHandler->handle($message, $peer_id);
@@ -88,8 +94,8 @@ class MessageProcess{
         $this->log($errorMessage);
 
         if ($peer_id > 0) {
-            $keyboard = KeyboardBuilder::getMainMenuJson();
-            SendResponse::vkSendMessage($peer_id, "Произошла техническая ошибка. Попробуйте позже.", $keyboard);
+            $errorMessage = ServiceMessage::technichalErrorMessage();
+            SendResponse::vkSendMessage($peer_id, $errorMessage['text'], $errorMessage['keyboard']);
         }
     }
     private function log($message) {

@@ -1,0 +1,24 @@
+[13-Jul-2026 19:43:55 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\vk-1\controller/UserState/DB_config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\vk-1\controller\BotController.php on line 25
+[13-Jul-2026 19:43:55 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\vk-1\controller/UserState/DB_config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\vk-1\controller\BotController.php:25
+Stack trace:
+#0 C:\xampp\htdocs\vk-1\index.php(5): BotController->__construct()
+#1 {main}
+  thrown in C:\xampp\htdocs\vk-1\controller\BotController.php on line 25
+[13-Jul-2026 19:44:05 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\vk-1\controller/UserState/DB_config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\vk-1\controller\BotController.php on line 25
+[13-Jul-2026 19:44:05 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\vk-1\controller/UserState/DB_config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\vk-1\controller\BotController.php:25
+Stack trace:
+#0 C:\xampp\htdocs\vk-1\index.php(5): BotController->__construct()
+#1 {main}
+  thrown in C:\xampp\htdocs\vk-1\controller\BotController.php on line 25
+[13-Jul-2026 19:44:21 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\vk-1\controller/UserState/DB_config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\vk-1\controller\BotController.php on line 25
+[13-Jul-2026 19:44:21 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\vk-1\controller/UserState/DB_config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\vk-1\controller\BotController.php:25
+Stack trace:
+#0 C:\xampp\htdocs\vk-1\index.php(5): BotController->__construct()
+#1 {main}
+  thrown in C:\xampp\htdocs\vk-1\controller\BotController.php on line 25
+[13-Jul-2026 19:47:05 Europe/Berlin] PHP Warning:  require_once(C:\xampp\htdocs\vk-1\controller/UserState/DB_config.php): Failed to open stream: No such file or directory in C:\xampp\htdocs\vk-1\controller\BotController.php on line 25
+[13-Jul-2026 19:47:05 Europe/Berlin] PHP Fatal error:  Uncaught Error: Failed opening required 'C:\xampp\htdocs\vk-1\controller/UserState/DB_config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\vk-1\controller\BotController.php:25
+Stack trace:
+#0 C:\xampp\htdocs\vk-1\index.php(5): BotController->__construct()
+#1 {main}
+  thrown in C:\xampp\htdocs\vk-1\controller\BotController.php on line 25

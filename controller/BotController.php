@@ -3,6 +3,7 @@
 class BotController{
 
     private Logger $logger;
+    private UserRepository $userRepository;
     
     public function __construct(){
 
@@ -15,8 +16,14 @@ class BotController{
         require_once __DIR__ . '/../MessageProcessor/CommandHandler.php';
 
         require_once __DIR__ . '/../MessageProcessor/UserState/UserState.php';
+        require_once __DIR__ . '/../MessageProcessor/UserState/UserRepository.php';
 
-        $this->logger = new Logger('botController_error.log');
+        require_once  __DIR__ . '/../Logs/Logger.php';
+
+        $this->logger = new Logger('BotController_error.log');
+
+        $conn = require_once  __DIR__ . '/../MessageProcessor/UserState/DB_config.php';
+        $this->userRepository = new UserRepository($conn); 
 
     }
 
@@ -44,7 +51,8 @@ class BotController{
         if ($this->isMessageNewRequest($data)) {
             $commands = require_once __DIR__ . '/../config/Commands.php';
             $commandHandler = new CommandHandler($commands);
-            $newMessage = new MessageProcess($commandHandler);
+
+            $newMessage = new MessageProcess($commandHandler, $this->userRepository);
             $newMessage->handleMessage($data);
             return;
         }

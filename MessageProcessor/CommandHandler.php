@@ -46,13 +46,9 @@
 
     } catch (\Throwable $e) {
         $this->log("Ошибка при выполнении команды '$commandKey': " . $e->getMessage());
+        $errorMessage  = ServiceMessage::technichalErrorMessage();
         
-        $keyboard = KeyboardBuilder::getMainMenuJson();
-        $this->sendResponse(
-            $peer_id, 
-            "😔 Произошла ошибка. Попробуйте позже или воспользуйтесь главным меню.",
-            $keyboard
-        );
+        $this->sendResponse($peer_id, $errorMessage['text'], $errorMessage['keyboard']);
     }
 }
 

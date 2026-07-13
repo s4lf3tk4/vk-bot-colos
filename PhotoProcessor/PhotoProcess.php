@@ -36,19 +36,15 @@ class PhotoProcess{
                 $result['keyboard']
             );
         } catch (\Throwable $e) {
-            $this->log("Ошибка при обработке фото: " . $e->getMessage());
-           SendResponse::vkSendMessage($this->peer_id, "Произошла ошибка при обработке фото.", KeyboardBuilder::getMainMenuJson());
+            $this->log("Ошибка при обработке фото в processPhotoMessage: " . $e->getMessage());
+
         }
     }
 
     public function processPhoto(){
         $photoURL = $this->extractPhotoUrl($this->attachment);
         if ($photoURL === null){
-            SendResponse::vkSendMessage(
-                $this->peer_id,
-                "Не удалось извлечь фото. Попробуйте снова.",
-                KeyboardBuilder::getMainMenuJson()
-            );
+            $this->log("Ошибка при обработке фото URL пустой в processPhoto: " . $e->getMessage());
             return;
         }
         $this->processPhotoMessage($photoURL);

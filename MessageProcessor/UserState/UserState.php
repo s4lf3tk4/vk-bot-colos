@@ -2,21 +2,22 @@
 
     class UserState{
         private $peer_id;
-        private mysqli $conn;
+        private UserRepository $userRepository;
         private Logger $logger;
-        public function __construct($peer_id){
+
+        public function __construct($peer_id, UserRepository $userRepository){
             $this->peer_id = $peer_id;
-            $this->conn = require __DIR__ . '/DB_config.php';
+            $this->userRepository = $userRepository;
             $this->logger = new Logger('UserState_error.log');
         }
-        public function handle(){
+         public function handle(){
             try{ 
             
-                if(!$this->isUnique()){
-                    $this->createUser();
+                if(!$this->userRepository->isUnique($this->peer_id)){
+                    $this->userRepository->createUser();
                     return ['status' => 'guest', 'requests' => 5];    
                 }
-                $userData = $this->getUserData();
+                $userData = $this->userRepository->getUserData($this->peer_id);
 
                 if ($userData['status'] === 'prem' && strtotime($userData['time_status']) > time()){
                     return ['status' => 'prem', 'requests' => null];
@@ -25,79 +26,12 @@
                 
               
             }catch (\Throwable $e) {
-                $this->handleError($e);
-                echo('ok');
+                $this->logger->handle("Ошибка в UserState". $e->getMessage());
+                return ['status' => 'error', 'requests' => null];
             }
         }
-
-        public function decrementRequests(){
-            $sql = "UPDATE users SET requests = requests - 1 WHERE id = ? AND requests > 0";
-            $stmt = $this->conn->prepare($sql);
-
-            if (!$stmt) {
-                throw new \Exception("Ошибка: " . $this->conn->error);
-            }
-
-            $stmt->bind_param("s", $this->peer_id);
-            $stmt->execute();
-            $stmt->close();
-        }
-
-        public function getUserData(){
-            $sql = "SELECT status, time_status, requests FROM users WHERE id = ? LIMIT 1";
-            $stmt = $this->conn->prepare($sql);
-            if (!$stmt) {
-                throw new \Exception("Ошибка getUserData: " . $this->conn->error);
-            }
-
-            $stmt->bind_param("s", $this->peer_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $responce = $result->fetch_assoc();
-            return $responce;
-        }
-
-        public function createUser(){
-            $sql = "INSERT INTO users (id, status, requests) VALUES (?, 'guest', 5)";
-            $stmt = $this->conn->prepare($sql);
-            
-            if (!$stmt) {
-                throw new \Exception("Ошибка createUser: " . $this->conn->error);
-            }
-
-            $stmt->bind_param("i", $this->peer_id);
-            $stmt->execute();
-            $stmt->close();
-        }
-
-        private function isUnique(): bool{
-            $sql = "SELECT id FROM users WHERE id = ? LIMIT 1";
-            $stmt = $this->conn->prepare($sql);
-
-            if (!$stmt) {
-                throw new \Exception("Ошибка isUnique: " . $this->conn->error);
-            }
-
-            $stmt->bind_param("s", $this->peer_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $exists = $result->num_rows > 0;
-            $stmt->close();
-
-            return $exists;
-        }
-        private function handleError($e, $peer_id = 0){
-            $errorMessage = "Ошибка: " . $e->getMessage() . " в строке: " . $e->getLine();
-            $this->log($errorMessage);
-            if ($peer_id > 0) {
-                $keyboard = KeyboardBuilder::getMainMenuJson();
-                SendResponse::vkSendMessage($peer_id, "Произошла техническая ошибка. Попробуйте позже.", $keyboard);
-            }
-        }
-        private function log($message) {
-            $this->logger->handle($message);
+        public function decrementRequests(): void{
+            $this->userRepository->decrementRequests($this->peer_Id);
         }
 
     }
-
-?>

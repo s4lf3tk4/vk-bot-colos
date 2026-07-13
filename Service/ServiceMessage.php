@@ -35,6 +35,23 @@ class ServiceMessage
             'keyboard' => KeyboardBuilder::getMainMenuJson(),
         ];
     }
+    public static function technichalErrorMessage(){
+        return [
+            'text' =>   "⚠️Произошла непредвиденная ошибка⚠️ \n\n".
+                        "Уже работаем над этим. Просим прощения за предоствленные неудобства. \n\n".
+                        "Напишите администратору для более подробной информации о вашей проблеме. \n\n" .
+                        "Это поможет ускорить работу, к тому же вы можете получить бонус за предоставленую информацию!",
+            'keyboard' => KeyboardBuilder::getMainMenuJson(),
+        ];
+    }
+        public static function noRequestsErorrMessage(){
+        return [
+            'text' =>   "⚠️Превышен лимит запросов или истекла подписка⚠️ \n\n".
+                        "Купите подписку, или оплатите нужное вам количество запросов\n\n",
+            'keyboard' => KeyboardBuilder::getUserOptionsJson(),
+        ];
+    }
+
 
 }
 ?>
